@@ -6,19 +6,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Client {
-
-
-
-    public void menu(){
-        System.out.println("1 - Número de pessoas numa localização");
-        System.out.println("2 - Comunicar infeção");
-    }
-
-
-
-
-
-
     public static void main (String[] args) throws IOException {
         Socket socket = new Socket("localhost", 12345);
 

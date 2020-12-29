@@ -21,11 +21,10 @@ public class ThreadServerRead extends Thread {
                     String username, password;
                     username = readSocket.readLine();
                     password = readSocket.readLine();
-
                     try{
                         this.user = listUsers.loginUser(username, password, ms);
                         ms.setMessages("Sessão iniciada!",null);
-                    } catch (Exception e){
+                    } catch (InvalidLoginExcpetion e){
                         ms.setMessages(e.getMessage(),null);
                     }
                 }
@@ -38,7 +37,7 @@ public class ThreadServerRead extends Thread {
                         listUsers.registerUser(user,pass,ms);
                         ms.setMessages("Registado",null);
                     }
-                    catch(Exception e){
+                    catch(InvalidRegistrationException e){
                         ms.setMessages(e.getMessage(),null);
                     }
                 }

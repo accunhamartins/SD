@@ -1,3 +1,5 @@
+package Client;
+
 public class Menu {
     private String menu;
     private int opcao;

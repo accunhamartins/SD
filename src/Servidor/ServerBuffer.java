@@ -1,7 +1,11 @@
+package Servidor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import Client.*;
+import Exceptions.*;
 
 public class ServerBuffer {
     private Condition cond;

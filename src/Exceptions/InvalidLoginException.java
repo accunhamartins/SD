@@ -1,15 +1,17 @@
-public class InvalidLoginExcpetion extends Exception{
+package Exceptions;
+
+public class InvalidLoginException extends Exception{
     /**
      * Creates an instance of InvalidLoginException without detail message
      */
-    public InvalidLoginExcpetion() {}
+    public InvalidLoginException() {}
 
     /**
      * Constructs an instance of InvalidLoginException with the specified message
      *
      * @param msg - the detail message
      */
-    public InvalidLoginExcpetion(String msg) {
+    public InvalidLoginException(String msg) {
         super(msg);
     }
 }

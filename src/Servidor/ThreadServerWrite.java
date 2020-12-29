@@ -1,6 +1,10 @@
+package Servidor;
+
 import java.io.PrintWriter;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import Client.*;
+import Exceptions.*;
 
 public class ThreadServerWrite extends Thread{
     private PrintWriter write_socket;

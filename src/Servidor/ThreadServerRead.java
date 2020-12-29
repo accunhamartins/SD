@@ -1,4 +1,9 @@
+package Servidor;
+
+
 import java.io.BufferedReader;
+import Client.*;
+import Exceptions.*;
 
 public class ThreadServerRead extends Thread {
     private BufferedReader readSocket;
@@ -24,8 +29,8 @@ public class ThreadServerRead extends Thread {
                     try{
                         this.user = listUsers.loginUser(username, password, ms);
                         ms.setMessages("Sessão iniciada!",null);
-                    } catch (InvalidLoginExcpetion e){
-                        ms.setMessages(e.getMessage(),null);
+                    } catch (InvalidLoginException e){
+                        ms.setMessages("Nome de utilizador não existe!",null);
                     }
                 }
                 else if(input.equals("2")){

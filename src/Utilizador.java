@@ -11,6 +11,13 @@ public class Utilizador{
         this.sick = false;
     }
 
+    public Utilizador(String nome, String password){
+        this.nome = nome;
+        this.password = password;
+        this.local = null;
+        this.sick = false;
+    }
+
     public Utilizador(String nome, String password, Localizacao local, boolean sick){
         this.nome = nome;
         this.password = password;

@@ -1,8 +1,8 @@
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 class ServerWorker implements Runnable {
     private Socket socket;
@@ -34,13 +34,31 @@ class ServerWorker implements Runnable {
 
 public class Server {
     public static void main (String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(12345);
-        
+        ServerSocket ss;
+        Socket s = null;
+        int i = 0;
+        ListUsers l = new ListUsers();
+        ReentrantLock lock = new ReentrantLock();
 
-        while (true) {
-            Socket socket = serverSocket.accept();
-            Thread worker = new Thread(new ServerWorker(socket));
-            worker.start();
+        try {
+            ss = new ServerSocket(12345);
+
+            while((s = ss.accept()) != null){
+                BufferedReader readSocket = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                PrintWriter writeSocket = new PrintWriter(s.getOutputStream(),true);
+
+                Condition cond = lock.newCondition();
+                ServerBuffer ms = new ServerBuffer(cond,lock);
+
+                ThreadServerRead tsr = new ThreadServerRead(readSocket,l,ms);
+                ThreadServerWrite tsw = new ThreadServerWrite(writeSocket,ms);
+                tsr.start();
+                tsw.start();
+            }
+            ss.close();
+
+        } catch (IOException e){
+            System.out.println(e.getMessage());
         }
     }
 }

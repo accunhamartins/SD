@@ -1,9 +1,8 @@
-package Servidor;
+
 
 
 import java.io.BufferedReader;
-import Client.*;
-import Exceptions.*;
+
 
 public class ThreadServerRead extends Thread {
     private BufferedReader readSocket;

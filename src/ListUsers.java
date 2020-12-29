@@ -1,9 +1,7 @@
-package Servidor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import Exceptions.*;
 
 public class ListUsers{
     private Map<String,Utilizador> utilizadores; //Key is the username

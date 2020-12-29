@@ -1,4 +1,3 @@
-package Exceptions;
 
 
 public class InvalidRegistrationException extends Exception{

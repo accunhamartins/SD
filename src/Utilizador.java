@@ -1,4 +1,4 @@
-package Servidor;
+
 
 public class Utilizador{
     private String nome;

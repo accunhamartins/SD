@@ -1,12 +1,11 @@
-package Servidor;
+
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-import Client.*;
-import Exceptions.*;
+
 
 class ServerWorker implements Runnable {
     private Socket socket;

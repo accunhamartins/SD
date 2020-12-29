@@ -1,11 +1,8 @@
-package Client;
 
 
 import java.io.BufferedReader;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-import Servidor.*;
-import Exceptions.*;
 
 public class ThreadClientOutput extends Thread{
     private BufferedReader readSocket;

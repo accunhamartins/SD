@@ -1,4 +1,4 @@
-package Servidor;
+
 
 public class Localizacao{
     private int x;

@@ -4,20 +4,41 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Client {
     public static void main (String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 12345);
+        String input = null;
+        Utilizador user = null;
+        Socket socket = null;
+        ReentrantLock lock = new ReentrantLock();
+        Condition cond = lock.newCondition();
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        try{
+            socket = new Socket("localhost",1234);
 
-        DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            BufferedReader ler_socket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        String userInput;
-        while ((userInput = in.readLine()) != null) {
-           
+            Menu menu = new Menu();
+            ThreadClientInput tci = new ThreadClientInput(socket,menu,lock, cond);
+            ThreadClientOutput tco = new ThreadClientOutput(ler_socket,menu,lock, cond);
+
+            tci.start();
+            tco.start();
+
+            tci.join();
+            tco.join();
+
+            ler_socket.close();
+
+            System.out.println("Até uma próxima!\n");
+            socket.close();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
         }
-        socket.shutdownOutput();
-        socket.close();
+        catch (InterruptedException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

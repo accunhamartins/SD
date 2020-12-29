@@ -17,7 +17,7 @@ public class ThreadClientInput extends Thread{
     public ThreadClientInput (Socket s, Menu m, ReentrantLock l, Condition c){
         try {
             this.tecladoIn = new BufferedReader(new InputStreamReader(System.in));
-            this.writeSocket = new PrintWriter(socket.getOutputStream(),true);
+            this.writeSocket = new PrintWriter(s.getOutputStream(),true);
             this.socket = s;
             this.menu = m;
             this.lock = l;

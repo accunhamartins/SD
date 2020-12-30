@@ -12,11 +12,11 @@ public class Menu {
                                        "* 0 - Sair                        *\n"+
                                        "***********************************\n");
                     break;
-            case 1: System.out.println("************** ÁREA CLIENTE *************\n"+
-                                       "* 1 - Número de pessoas por localização *\n"+
-                                       "* 2 - Comunicar Infeção                 *\n"+
-                                       "* 0 - Terminar Sessao                   *\n"+
-                                       "*****************************************\n");
+            case 1: System.out.println("************** ÁREA CLIENTE **************\n"+
+                                       "* 1 - Número de pessoas por localização  *\n"+
+                                       "* 2 - Comunicar Infeção                  *\n"+
+                                       "* 0 - Terminar Sessao                    *\n"+
+                                       "******************************************\n");
                     break;
             case 2: 
                     break;     

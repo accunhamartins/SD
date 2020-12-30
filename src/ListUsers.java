@@ -1,16 +1,20 @@
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class ListUsers{
     private Map<String,Utilizador> utilizadores; //Key is the username
     private Map<String, ServerBuffer> messages;
+    private Lock userLock;
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
         this.messages = new HashMap<>();
-    }
+        this.userLock = new ReentrantLock(); 
+       }
 
     /**
      * Method that will be used to register a user into the system.
@@ -23,16 +27,17 @@ public class ListUsers{
      */
 
     public void registerUser (String username, String password, ServerBuffer ms) throws InvalidRegistrationException {
-        synchronized (this.utilizadores) {
+        this.userLock.lock();
+        try {
             if(this.utilizadores.containsKey(username)){
                 throw new InvalidRegistrationException("Nome de utilizador já em uso!");
             } else {
                 Utilizador user = new Utilizador(username,password);
                 this.utilizadores.put(username, user);
-                synchronized(this.messages){
-                    this.messages.put(username,ms);
-                }
+                this.messages.put(username,ms);
             }
+        } finally {
+            this.userLock.unlock();
         }
     }
 
@@ -49,16 +54,15 @@ public class ListUsers{
 
     public Utilizador loginUser (String username, String password, ServerBuffer ms) throws InvalidLoginException {
         Utilizador u;
-        synchronized (this.utilizadores){
+        this.userLock.lock();
+        try{
             if(!(this.utilizadores.containsKey(username))) {
                 throw new InvalidLoginException("Nome de utilizador não existe!");
             } else if (!(this.utilizadores.get(username).getPassword().equals(password))){
                 throw new InvalidLoginException("A password está incorreta!");
             }
             u = this.utilizadores.get(username);
-        }
-
-        synchronized(this.messages){
+        
             if(this.messages.containsKey(username)){
                 ServerBuffer m = this.messages.get(username);
                 String linha;
@@ -67,6 +71,8 @@ public class ListUsers{
                 }
                 this.messages.put(username,ms);
             }
+        } finally {
+            this.userLock.unlock();
         }
 
         return u;

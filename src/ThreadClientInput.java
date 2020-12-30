@@ -50,7 +50,8 @@ public class ThreadClientInput extends Thread{
                         this.lock.lock();
                         cond.await();
                         this.lock.unlock();
-                        input="1";
+
+                        input= "1";
                     }
                     else if (input.equals("2")){                //Register
                         System.out.println("Username: ");

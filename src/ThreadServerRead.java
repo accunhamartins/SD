@@ -27,9 +27,9 @@ public class ThreadServerRead extends Thread {
                     password = readSocket.readLine();
                     try{
                         this.user = listUsers.loginUser(username, password, ms);
-                        ms.setMessages("Sessão iniciada!",null);
-                    } catch (InvalidLoginException e){
-                        ms.setMessages("Nome de utilizador não existe!",null);
+                        ms.setMessages("Sessão iniciada!", null);
+                    } catch (Exception e){
+                        ms.setMessages(e.getMessage() ,null);
                     }
                 }
                 else if(input.equals("2")){
@@ -41,7 +41,7 @@ public class ThreadServerRead extends Thread {
                         listUsers.registerUser(user,pass,ms);
                         ms.setMessages("Registado",null);
                     }
-                    catch(InvalidRegistrationException e){
+                    catch(Exception e){
                         ms.setMessages(e.getMessage(),null);
                     }
                 }

@@ -49,7 +49,6 @@ public class ListUsers{
 
     public Utilizador loginUser (String username, String password, ServerBuffer ms) throws InvalidLoginException {
         Utilizador u;
-
         synchronized (this.utilizadores){
             if(!(this.utilizadores.containsKey(username))) {
                 throw new InvalidLoginException("Nome de utilizador não existe!");

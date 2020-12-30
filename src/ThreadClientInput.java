@@ -54,6 +54,7 @@ public class ThreadClientInput extends Thread{
                         input= "1";
                     }
                     else if (input.equals("2")){                //Register
+                        writeSocket.println("2");
                         System.out.println("Username: ");
                         input = tecladoIn.readLine();
                         writeSocket.println(input);

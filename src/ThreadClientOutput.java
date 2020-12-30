@@ -37,8 +37,8 @@ public class ThreadClientOutput extends Thread{
                     this.lock.unlock();
                 }
 
-                else if(line.equals("Registado") || line.equals("Terminou sessão") || line.equals("Username não existe!!!")
-                        || line.equals("A password está incorreta!") || line.equals("Username já se encontra em uso!")){
+                else if(line.equals("Registado") || line.equals("Terminou sessão") || line.equals("Nome de utilizador não existe!")
+                        || line.equals("A password está incorreta!") || line.equals("Nome de utilizador já em uso!")){
                     menu.setOpcao(0);
                     System.out.println("\n"+line+"\n");
                     this.lock.lock();

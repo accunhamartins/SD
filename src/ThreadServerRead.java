@@ -36,7 +36,6 @@ public class ThreadServerRead extends Thread {
                     String user,pass;
                     user = readSocket.readLine();
                     pass = readSocket.readLine();
-
                     try{
                         listUsers.registerUser(user,pass,ms);
                         ms.setMessages("Registado",null);

@@ -71,6 +71,11 @@ public class ThreadClientInput extends Thread{
                     if(input.equals("1") || input.equals("2") || input.equals("0")) menu.showMenu();
                     else System.out.println("Opção Inválida");
                 }
+
+                else if(menu.getOpcao() == 1){
+                    if(input.equals("0")) break;
+                }
+
             }
             
             socket.shutdownOutput();

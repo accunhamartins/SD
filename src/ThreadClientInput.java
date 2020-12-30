@@ -35,7 +35,7 @@ public class ThreadClientInput extends Thread{
 
         try {
             menu.showMenu();
-            while((input = tecladoIn.readLine()) != null){
+            while((input = tecladoIn.readLine()) != null){  
                 if(menu.getOpcao() == 0){
                     if(input.equals("1")){                      //Login
                         writeSocket.println("1");
@@ -71,6 +71,9 @@ public class ThreadClientInput extends Thread{
                     else System.out.println("Opção Inválida");
                 }
             }
+            
+            socket.shutdownOutput();
+
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }

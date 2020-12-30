@@ -29,6 +29,14 @@ public class ThreadClientOutput extends Thread{
                     cond.signal();
                     this.lock.unlock();
                 }
+
+                else if(line.equals("0")){
+                    menu.setOpcao(1);
+                    this.lock.lock();
+                    cond.signal();
+                    this.lock.unlock();
+                }
+
                 else if(line.equals("Registado") || line.equals("Terminou sessão") || line.equals("Username não existe!!!")
                         || line.equals("A password está incorreta!") || line.equals("Username já se encontra em uso!")){
                     menu.setOpcao(0);

@@ -62,7 +62,7 @@ public class ThreadClientInput extends Thread{
                         input = tecladoIn.readLine();
                         writeSocket.println(input);
 
-                        input="2";
+                        input= "2" ;
                     }
                     else if(input.equals("0")){                 //Exit
                         break;

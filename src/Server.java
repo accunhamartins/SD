@@ -16,7 +16,7 @@ public class Server {
         ReentrantLock lock = new ReentrantLock();
 
         try {
-            ss = new ServerSocket(1234);
+            ss = new ServerSocket(12345);
 
             while((s = ss.accept()) != null){
                 BufferedReader readSocket = new BufferedReader(new InputStreamReader(s.getInputStream()));

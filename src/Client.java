@@ -18,7 +18,7 @@ public class Client {
         Condition cond = lock.newCondition();
 
         try{
-            socket = new Socket("localhost",1234);
+            socket = new Socket("localhost",12345);
 
             BufferedReader ler_socket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 

@@ -63,6 +63,18 @@ public class ThreadClientInput extends Thread{
                         input = tecladoIn.readLine();
                         writeSocket.println(input);
 
+                        System.out.println("Localização (X): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
+
+                        System.out.println("Localização (Y): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
                         input= "2" ;
                     }
                     else if(input.equals("0")){                 //Exit

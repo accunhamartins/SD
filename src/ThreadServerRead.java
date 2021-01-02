@@ -33,11 +33,13 @@ public class ThreadServerRead extends Thread {
                     }
                 }
                 else if(input.equals("2")){
-                    String user,pass;
+                    String user,pass, x, y;
                     user = readSocket.readLine();
                     pass = readSocket.readLine();
+                    x = readSocket.readLine();
+                    y = readSocket.readLine();
                     try{
-                        listUsers.registerUser(user,pass,ms);
+                        listUsers.registerUser(user,pass,x,y,ms);
                         ms.setMessages("Registado",null);
                     }
                     catch(Exception e){

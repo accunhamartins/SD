@@ -6,8 +6,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class ListUsers{
+    private final int size = 5;
     private Map<String,Utilizador> utilizadores; //Key is the username
     private Map<String, ServerBuffer> messages;
+    private int[][] map = new int[size][size];
     private Lock userLock;
 
     public ListUsers(){
@@ -26,13 +28,19 @@ public class ListUsers{
      * @throws InvalidRegistrationException - Thrown if username has already been taken
      */
 
-    public void registerUser (String username, String password, ServerBuffer ms) throws InvalidRegistrationException {
+    public void registerUser (String username, String password, String x1, String y1, ServerBuffer ms) throws InvalidRegistrationException, InvalidLocationException {
         this.userLock.lock();
         try {
+            int x = Integer.parseInt(x1);
+            int y = Integer.parseInt(y1);
             if(this.utilizadores.containsKey(username)){
                 throw new InvalidRegistrationException("Nome de utilizador já em uso!");
-            } else {
-                Utilizador user = new Utilizador(username,password);
+            }
+             else if(x < 0 || x > 5 || y < 0 || y > 5){
+                throw new InvalidLocationException("Localização inválida!");
+             }
+             else {
+                Utilizador user = new Utilizador(username,password, new Localizacao(x, y));
                 this.utilizadores.put(username, user);
                 this.messages.put(username,ms);
             }

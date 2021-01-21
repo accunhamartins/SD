@@ -29,7 +29,6 @@ public class ThreadClientOutput extends Thread{
                     cond.signal();
                     this.lock.unlock();
                 }
-
                 else if(line.equals("0")){
                     menu.setOpcao(1);
                     this.lock.lock();
@@ -39,7 +38,7 @@ public class ThreadClientOutput extends Thread{
 
                 else if(line.equals("Registado") || line.equals("Terminou sessão") || line.equals("Nome de utilizador não existe!")
                         || line.equals("A password está incorreta!") || line.equals("Nome de utilizador já em uso!")
-                        || line.equals("Localização inválida!")){
+                        || line.equals("Localização inválida!") || line.equals("Localizacao Atualizada")){
                     menu.setOpcao(0);
                     System.out.println("\n"+line+"\n");
                     this.lock.lock();

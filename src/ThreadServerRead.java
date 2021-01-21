@@ -46,6 +46,19 @@ public class ThreadServerRead extends Thread {
                         ms.setMessages(e.getMessage(),null);
                     }
                 }
+                else if(input.equals("1.2")){
+                    String x,y;
+                    x = readSocket.readLine();
+                    y = readSocket.readLine();
+                    try{
+                        this.listUsers.validaLocalizacao(user.getNome(),x,y,ms);
+                        ms.setMessages("Localizacao Atualizada",null);
+                    }
+                    catch (Exception e){
+                        ms.setMessages(e.getMessage(),null);
+                    }
+
+                }
             }
             readSocket.close();
             ms.setMessages("Sair",null);

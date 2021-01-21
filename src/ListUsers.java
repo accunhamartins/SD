@@ -1,6 +1,5 @@
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,13 +9,21 @@ public class ListUsers{
     private Map<String,Utilizador> utilizadores; //Key is the username
     private Map<String, ServerBuffer> messages;
     private int[][] map = new int[size][size];
+    private List<List<Set <Utilizador>>> hist; //Matriz de users -> Java não permite criar matrizes com tipos não básicos
     private Lock userLock;
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
         this.messages = new HashMap<>();
-        this.userLock = new ReentrantLock(); 
-       }
+        this.userLock = new ReentrantLock();
+        this.hist = new ArrayList<>(size);
+        for(int i = 0; i < size; i++){
+            hist.add(i, new ArrayList<>(size));
+            for(int j = 0; j < size; j++){
+                hist.get(i).add(j,new TreeSet<>());
+            }
+        } //Cria a matriz e em cada posição põe um set
+    }
 
     /**
      * Method that will be used to register a user into the system.
@@ -40,8 +47,10 @@ public class ListUsers{
                 throw new InvalidLocationException("Localização inválida!");
              }
              else {
-                Utilizador user = new Utilizador(username,password, new Localizacao(x, y));
+                Utilizador user = new Utilizador(username,password, new Localizacao(x, y), new TreeSet<Localizacao>());
                 this.utilizadores.put(username, user);
+                this.map[x][y]++;
+                this.hist.get(x).get(y).add(user);
                 this.messages.put(username,ms);
             }
         } finally {
@@ -86,4 +95,29 @@ public class ListUsers{
         return u;
     }
 
+    public void validaLocalizacao (String username, String xs, String ys, ServerBuffer ms) throws InvalidLocationException {
+        this.userLock.lock();
+        Localizacao l;
+        try{
+            int x = Integer.parseInt(xs);
+            int y = Integer.parseInt(ys);
+
+            if(x < 0 || x > 5 || y < 0 || y > 5){
+                throw new InvalidLocationException("Localização inválida!");
+            }
+            else {
+                l = new Localizacao(x,y); //Nova localização
+                //Antiga posição do user
+                int xo = utilizadores.get(username).getLocal().getX();
+                int yo = utilizadores.get(username).getLocal().getY();
+                map[xo][yo]--; //Como user saiu da antiga posição, deixa de constar nessa mesma posição no mapa
+                utilizadores.get(username).setLocal(l); //Alteramos a sua localização para a atual
+                map[x][y]++; //Tem de constar na sua nova posição no mapa
+                hist.get(x).get(y).add(utilizadores.get(username)); //Colocamos já o User no historico de todos os users que estiveram nesta posição
+                this.messages.put(username,ms);
+            }
+        } finally {
+            this.userLock.unlock();
+        }
+    }
 }

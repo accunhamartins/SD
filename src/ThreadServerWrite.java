@@ -26,6 +26,7 @@ public class ThreadServerWrite extends Thread{
                     cond.await();
                 if(linha.equals("Sair"))
                     break;
+                System.out.println(linha);
                 this.write_socket.println(linha);
             }
         }

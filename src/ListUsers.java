@@ -9,7 +9,7 @@ public class ListUsers{
     private Map<String,Utilizador> utilizadores; //Key is the username
     private Map<String, ServerBuffer> messages;
     private int[][] map = new int[size][size];
-    private List<List<Set <Utilizador>>> hist; //Matriz de users -> Java não permite criar matrizes com tipos não básicos
+    private List<List<Set <String>>> hist; //Matriz de users -> Java não permite criar matrizes com tipos não básicos
     private Lock userLock;
 
     public ListUsers(){
@@ -43,14 +43,14 @@ public class ListUsers{
             if(this.utilizadores.containsKey(username)){
                 throw new InvalidRegistrationException("Nome de utilizador já em uso!");
             }
-             else if(x < 0 || x > 5 || y < 0 || y > 5){
-                throw new InvalidLocationException("Localização inválida!");
+             else if(x < 0 || x >= size || y < 0 || y >= size){
+                throw new InvalidLocationException("Localização inválida! Efetue novamente o registo!");
              }
              else {
                 Utilizador user = new Utilizador(username,password, new Localizacao(x, y), new TreeSet<Localizacao>());
                 this.utilizadores.put(username, user);
                 this.map[x][y]++;
-                this.hist.get(x).get(y).add(user);
+                this.hist.get(x).get(y).add(username);
                 this.messages.put(username,ms);
             }
         } finally {
@@ -102,7 +102,7 @@ public class ListUsers{
             int x = Integer.parseInt(xs);
             int y = Integer.parseInt(ys);
 
-            if(x < 0 || x > 5 || y < 0 || y > 5){
+            if(x < 0 || x >= size || y < 0 || y >= size){
                 throw new InvalidLocationException("Localização inválida!");
             }
             else {
@@ -111,9 +111,11 @@ public class ListUsers{
                 int xo = utilizadores.get(username).getLocal().getX();
                 int yo = utilizadores.get(username).getLocal().getY();
                 map[xo][yo]--; //Como user saiu da antiga posição, deixa de constar nessa mesma posição no mapa
-                utilizadores.get(username).setLocal(l); //Alteramos a sua localização para a atual
+                Utilizador u = utilizadores.get(username); //Alteramos a sua localização para a atual
+                u.setLocal(l);
+                utilizadores.put(u.getNome(),u);
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
-                hist.get(x).get(y).add(utilizadores.get(username)); //Colocamos já o User no historico de todos os users que estiveram nesta posição
+                hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
                 this.messages.put(username,ms);
             }
         } finally {

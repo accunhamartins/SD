@@ -88,25 +88,20 @@ public class ThreadClientInput extends Thread{
                         break;
                     }
                     else if(input.equals("2")){ //Alterar localização
-                        boolean valid = false;
-                        while(!valid){
-                            writeSocket.println("1.2");
-                            System.out.println("Localização (X): ");
-                            input = tecladoIn.readLine();
-                            writeSocket.println(input);
 
-                            System.out.println("Localização (Y): ");
-                            input = tecladoIn.readLine();
-                            writeSocket.println(input);
+                        writeSocket.println("1.2");
+                        System.out.println("Localização (X): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
 
-                            this.lock.lock();
-                            cond.await();
-                            this.lock.unlock();
+                        System.out.println("Localização (Y): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
 
-                            if(!valid){ //Caso de não ser válida
-                                System.out.println("A posição que inseriu é inválida. Tente novamente.");
-                            }
-                        }
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
                         input="2";
                     }
                     if(input.equals("2") || input.equals("0")) menu.showMenu();

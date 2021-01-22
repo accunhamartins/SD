@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ThreadClientOutput extends Thread{
+public class ThreadClientOutput implements Runnable{
     private BufferedReader readSocket;
     private Menu menu;
     private ReentrantLock lock;
@@ -47,7 +47,7 @@ public class ThreadClientOutput extends Thread{
                     cond.signal();
                     this.lock.unlock();
                 }
-                else if(line.equals("Server.Localizacao Atualizada") || line.equals("Localização inválida!")){
+                else if(line.equals("Localizacao Atualizada") || line.equals("Localização inválida!")){
                     menu.setOpcao(1);
                     System.out.println("\n"+line+"\n");
                     this.lock.lock();

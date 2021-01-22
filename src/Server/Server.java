@@ -25,8 +25,8 @@ public class Server {
                 Condition cond = lock.newCondition();
                 ServerBuffer ms = new ServerBuffer(cond,lock);
 
-                ThreadServerRead tsr = new ThreadServerRead(readSocket,l,ms);
-                ThreadServerWrite tsw = new ThreadServerWrite(writeSocket,ms);
+                Thread tsr = new Thread(new ThreadServerRead(readSocket,l,ms));
+                Thread tsw = new Thread (new ThreadServerWrite(writeSocket,ms));
                 tsr.start();
                 tsw.start();
             }

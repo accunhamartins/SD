@@ -11,7 +11,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-public class ThreadClientInput extends Thread{
+public class ThreadClientInput implements Runnable{
     private BufferedReader tecladoIn;
     private PrintWriter writeSocket;
     private Socket socket;

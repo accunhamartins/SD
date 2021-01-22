@@ -25,8 +25,8 @@ public class Client {
             BufferedReader ler_socket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Menu menu = new Menu();
-            ThreadClientInput tci = new ThreadClientInput(socket,menu,lock, cond);
-            ThreadClientOutput tco = new ThreadClientOutput(ler_socket,menu,lock, cond);
+            Thread tci = new Thread (new ThreadClientInput(socket,menu,lock, cond));
+            Thread tco = new Thread (new ThreadClientOutput(ler_socket,menu,lock, cond));
 
             tci.start();
             tco.start();

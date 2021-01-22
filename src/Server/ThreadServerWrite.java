@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ThreadServerWrite extends Thread{
+public class ThreadServerWrite implements Runnable{
     private PrintWriter write_socket;
     private Condition cond;
     private ServerBuffer ms;
@@ -26,7 +26,6 @@ public class ThreadServerWrite extends Thread{
                     cond.await();
                 if(linha.equals("Sair"))
                     break;
-                System.out.println(linha);
                 this.write_socket.println(linha);
             }
         }

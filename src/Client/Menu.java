@@ -15,7 +15,7 @@ public class Menu {
             case 1: System.out.println("************** ÁREA CLIENTE **************\n"+
                                        "* 1 - Número de pessoas por localização  *\n"+
                                        "* 2 - Alterar localização                *\n"+
-                                       "* 3 - Localizações livres                *\n"+
+                                       "* 3 - Comunicar Localização Livre        *\n"+
                                        "* 4 - Comunicar Infeção                  *\n"+
                                        "* 0 - Terminar Sessao                    *\n"+
                                        "******************************************\n");

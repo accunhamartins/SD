@@ -5,6 +5,7 @@ import Exceptions.InvalidLoginException;
 import Exceptions.InvalidRegistrationException;
 
 import java.util.*;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -16,18 +17,24 @@ public class ListUsers{
     private int[][] map = new int[size][size];
     private List<List<Set <String>>> hist; //Matriz de users -> Java não permite criar matrizes com tipos não básicos
     private Lock userLock;
+    private Condition cond;
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
         this.messages = new HashMap<>();
         this.userLock = new ReentrantLock();
         this.hist = new ArrayList<>(size);
+        this.cond = userLock.newCondition();
         for(int i = 0; i < size; i++){
             hist.add(i, new ArrayList<>(size));
             for(int j = 0; j < size; j++){
                 hist.get(i).add(j,new TreeSet<>());
             }
         } //Cria a matriz e em cada posição põe um set
+    }
+
+    public Condition getCond() {
+        return cond;
     }
 
     /**
@@ -127,4 +134,25 @@ public class ListUsers{
             this.userLock.unlock();
         }
     }
+
+    public int numeroPorLocalizacao(String xs, String ys, ServerBuffer ms) throws InvalidLocationException {
+        this.userLock.lock();
+        try{
+            int x = Integer.parseInt(xs);
+            int y = Integer.parseInt(ys);
+            if(x < 0 || x >= size || y < 0 || y >= size){
+                throw new InvalidLocationException("Localização inválida!");
+            }
+            return map[x][y];
+        } finally {
+            this.userLock.unlock();
+        }
+    }
+
+    public boolean estaLivre(int x, int y){
+        if(map[x][y] == 0) cond.signal();
+        return (map[x][y] == 0);
+    }
+
+
 }

@@ -89,6 +89,22 @@ public class ThreadClientInput implements Runnable{
                     if(input.equals("0")) {
                         break;
                     }
+                    else if (input.equals("1")){
+                        writeSocket.println("1.1");
+                        System.out.println("Localização (X) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
+
+                        System.out.println("Localização (Y) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
+                        input="1";
+                    }
                     else if(input.equals("2")){ //Alterar localização
 
                         writeSocket.println("1.2");
@@ -106,7 +122,25 @@ public class ThreadClientInput implements Runnable{
 
                         input="2";
                     }
-                    if(input.equals("2") || input.equals("0")) menu.showMenu();
+
+                    else if(input.equals("3")){
+
+                        writeSocket.println("1.3");
+                        System.out.println("Localização (X) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
+
+                        System.out.println("Localização (Y) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.println(input);
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
+                        input="3";
+                    }
+                    if(input.equals("1") ||input.equals("2") || input.equals("3") || input.equals("0")) menu.showMenu();
                     else System.out.println("Opção Inválida");
                 }
 

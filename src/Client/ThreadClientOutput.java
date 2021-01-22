@@ -47,7 +47,9 @@ public class ThreadClientOutput implements Runnable{
                     cond.signal();
                     this.lock.unlock();
                 }
-                else if(line.equals("Localizacao Atualizada") || line.equals("Localização inválida!")){
+                else if(line.equals("Localizacao Atualizada") || line.equals("Localização inválida!")
+                        || line.contains("Numero de pessoas = ") || line.contains("A posição ")
+                        || line.equals("Esperando que posição esteja livre")){
                     menu.setOpcao(1);
                     System.out.println("\n"+line+"\n");
                     this.lock.lock();

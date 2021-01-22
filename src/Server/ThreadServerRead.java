@@ -46,6 +46,21 @@ public class ThreadServerRead implements Runnable{
                         ms.setMessages(e.getMessage(),null);
                     }
                 }
+
+                else if(input.equals("1.1")){
+                    String x,y;
+                    x = readSocket.readLine();
+                    y = readSocket.readLine();
+                    try{
+                        int count = this.listUsers.numeroPorLocalizacao(x,y,ms);
+                        ms.setMessages("Numero de pessoas = " + count,null);
+                    }
+                    catch (Exception e){
+                        ms.setMessages(e.getMessage(),null);
+                    }
+
+                }
+
                 else if(input.equals("1.2")){
                     String x,y;
                     x = readSocket.readLine();
@@ -53,6 +68,21 @@ public class ThreadServerRead implements Runnable{
                     try{
                         this.listUsers.validaLocalizacao(user.getNome(),x,y,ms);
                         ms.setMessages("Localizacao Atualizada",null);
+                    }
+                    catch (Exception e){
+                        ms.setMessages(e.getMessage(),null);
+                    }
+
+                }
+
+                else if(input.equals("1.3")){
+                    String x,y;
+                    x = readSocket.readLine();
+                    y = readSocket.readLine();
+                    try{
+                        Thread tp = new Thread(new ThreadPosicaoLivre(readSocket, listUsers, ms, x ,y ,listUsers.getCond()));
+                        tp.start();
+                        ms.setMessages("Esperando que posição esteja livre",null);
                     }
                     catch (Exception e){
                         ms.setMessages(e.getMessage(),null);

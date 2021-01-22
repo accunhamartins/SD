@@ -5,6 +5,7 @@ import Exceptions.InvalidLoginException;
 import Exceptions.InvalidRegistrationException;
 
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,6 +20,7 @@ public class ListUsers{
     private Lock userLock;
     private Lock posicaoLock = new ReentrantLock();
     private Condition cond = posicaoLock.newCondition();
+    private ArrayBlockingQueue queue;
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
@@ -26,6 +28,7 @@ public class ListUsers{
         this.userLock = new ReentrantLock();
         this.hist = new ArrayList<>(size);
         this.cond = userLock.newCondition();
+        this.queue = new ArrayBlockingQueue(20);
         for(int i = 0; i < size; i++){
             hist.add(i, new ArrayList<>(size));
             for(int j = 0; j < size; j++){
@@ -104,7 +107,7 @@ public class ListUsers{
         return u;
     }
 
-    public void validaLocalizacao (String username, String xs, String ys, ServerBuffer ms) throws InvalidLocationException {
+    public void validaLocalizacao (String username, String xs, String ys, ServerBuffer ms) throws InvalidLocationException, InterruptedException {
         this.userLock.lock();
         this.posicaoLock.lock();
         Localizacao l;
@@ -127,7 +130,10 @@ public class ListUsers{
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
                 hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
                 this.messages.put(username,ms);
-                cond.signal();
+                if(queue.peek()!=null){
+                    Condition c = (Condition) queue.take();
+                    c.signal();
+                }
             }
         } finally {
             this.userLock.unlock();
@@ -157,6 +163,7 @@ public class ListUsers{
             ms.setMessages("A posição não se encontra livre. Será avisado assim que estiver", null);
             this.posicaoLock.lock();
             cond = posicaoLock.newCondition();
+            queue.put(cond);
             cond.await();
             this.posicaoLock.unlock();
         }

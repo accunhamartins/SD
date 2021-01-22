@@ -1,13 +1,13 @@
-
+package Exceptions;
 
 public class InvalidLoginException extends Exception{
     /**
-     * Creates an instance of InvalidLoginException without detail message
+     * Creates an instance of Exceptions.InvalidLoginException without detail message
      */
     public InvalidLoginException() {}
 
     /**
-     * Constructs an instance of InvalidLoginException with the specified message
+     * Constructs an instance of Exceptions.InvalidLoginException with the specified message
      *
      * @param msg - the detail message
      */

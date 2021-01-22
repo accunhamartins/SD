@@ -1,3 +1,8 @@
+package Server;
+
+import Exceptions.InvalidLocationException;
+import Exceptions.InvalidLoginException;
+import Exceptions.InvalidRegistrationException;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;

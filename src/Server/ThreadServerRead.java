@@ -1,4 +1,4 @@
-
+package Server;
 
 
 import java.io.BufferedReader;
@@ -52,7 +52,7 @@ public class ThreadServerRead extends Thread {
                     y = readSocket.readLine();
                     try{
                         this.listUsers.validaLocalizacao(user.getNome(),x,y,ms);
-                        ms.setMessages("Localizacao Atualizada",null);
+                        ms.setMessages("Server.Localizacao Atualizada",null);
                     }
                     catch (Exception e){
                         ms.setMessages(e.getMessage(),null);

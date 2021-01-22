@@ -1,4 +1,6 @@
+package Client;
 
+import Client.Menu;
 
 import java.io.BufferedReader;
 import java.util.concurrent.locks.Condition;
@@ -45,7 +47,7 @@ public class ThreadClientOutput extends Thread{
                     cond.signal();
                     this.lock.unlock();
                 }
-                else if(line.equals("Localizacao Atualizada") || line.equals("Localização inválida!")){
+                else if(line.equals("Server.Localizacao Atualizada") || line.equals("Localização inválida!")){
                     menu.setOpcao(1);
                     System.out.println("\n"+line+"\n");
                     this.lock.lock();

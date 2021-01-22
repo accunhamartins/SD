@@ -63,11 +63,11 @@ public class ThreadClientInput extends Thread{
                         input = tecladoIn.readLine();
                         writeSocket.println(input);
 
-                        System.out.println("Localização (X): ");
+                        System.out.println("Localização (X) (0 a 4): ");
                         input = tecladoIn.readLine();
                         writeSocket.println(input);
 
-                        System.out.println("Localização (Y): ");
+                        System.out.println("Localização (Y) (0 a 4): ");
                         input = tecladoIn.readLine();
                         writeSocket.println(input);
 
@@ -90,11 +90,11 @@ public class ThreadClientInput extends Thread{
                     else if(input.equals("2")){ //Alterar localização
 
                         writeSocket.println("1.2");
-                        System.out.println("Localização (X): ");
+                        System.out.println("Localização (X) (0 a 4): ");
                         input = tecladoIn.readLine();
                         writeSocket.println(input);
 
-                        System.out.println("Localização (Y): ");
+                        System.out.println("Localização (Y) (0 a 4): ");
                         input = tecladoIn.readLine();
                         writeSocket.println(input);
 

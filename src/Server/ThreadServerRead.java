@@ -80,9 +80,7 @@ public class ThreadServerRead implements Runnable{
                     x = readSocket.readLine();
                     y = readSocket.readLine();
                     try{
-                        Thread tp = new Thread(new ThreadPosicaoLivre(readSocket, listUsers, ms, x ,y ,listUsers.getCond()));
-                        tp.start();
-                        ms.setMessages("Esperando que posição esteja livre",null);
+                        listUsers.estaLivre(x , y, ms, this.user.getNome());
                     }
                     catch (Exception e){
                         ms.setMessages(e.getMessage(),null);

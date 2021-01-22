@@ -17,7 +17,8 @@ public class ListUsers{
     private int[][] map = new int[size][size];
     private List<List<Set <String>>> hist; //Matriz de users -> Java não permite criar matrizes com tipos não básicos
     private Lock userLock;
-    private Condition cond;
+    private Lock posicaoLock = new ReentrantLock();
+    private Condition cond = posicaoLock.newCondition();
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
@@ -31,10 +32,6 @@ public class ListUsers{
                 hist.get(i).add(j,new TreeSet<>());
             }
         } //Cria a matriz e em cada posição põe um set
-    }
-
-    public Condition getCond() {
-        return cond;
     }
 
     /**
@@ -109,6 +106,7 @@ public class ListUsers{
 
     public void validaLocalizacao (String username, String xs, String ys, ServerBuffer ms) throws InvalidLocationException {
         this.userLock.lock();
+        this.posicaoLock.lock();
         Localizacao l;
         try{
             int x = Integer.parseInt(xs);
@@ -129,9 +127,11 @@ public class ListUsers{
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
                 hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
                 this.messages.put(username,ms);
+                cond.signal();
             }
         } finally {
             this.userLock.unlock();
+            this.posicaoLock.unlock();
         }
     }
 
@@ -149,9 +149,19 @@ public class ListUsers{
         }
     }
 
-    public boolean estaLivre(int x, int y){
-        if(map[x][y] == 0) cond.signal();
-        return (map[x][y] == 0);
+    public void estaLivre(String xs, String ys, ServerBuffer ms, String nome) throws InterruptedException{
+        boolean livre = false;
+        int x = Integer.parseInt(xs);
+        int y = Integer.parseInt(ys);
+        while(map[x][y] > 0){
+            ms.setMessages("A posição não se encontra livre. Será avisado assim que estiver", null);
+            this.posicaoLock.lock();
+            cond = posicaoLock.newCondition();
+            cond.await();
+            this.posicaoLock.unlock();
+        }
+
+        ms.setMessages("A posição " + x + " " + y + " está livre", null);
     }
 
 

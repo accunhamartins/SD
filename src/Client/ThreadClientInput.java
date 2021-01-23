@@ -174,6 +174,97 @@ public class ThreadClientInput implements Runnable{
                     else if(input.equals("4")) menu.showMenu();
                     else System.out.println("Opção Inválida");
                 }
+                else if(menu.getOpcao() == 2){
+                    if(input.equals("0")) {
+                        break;
+                    }
+                    else if (input.equals("1")){
+                        writeSocket.writeUTF("1.1");
+                        writeSocket.flush();
+                        System.out.println("Localização (X) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.writeUTF(input);
+                        writeSocket.flush();
+
+                        System.out.println("Localização (Y) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.writeUTF(input);
+                        writeSocket.flush();
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
+                        input="1";
+                    }
+                    else if(input.equals("2")){ //Alterar localização
+
+                        writeSocket.writeUTF("1.2");
+                        writeSocket.flush();
+                        System.out.println("Localização (X) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.writeUTF(input);
+                        writeSocket.flush();
+
+                        System.out.println("Localização (Y) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.writeUTF(input);
+                        writeSocket.flush();
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
+                        input="2";
+                    }
+
+                    else if(input.equals("3")){
+
+                        writeSocket.writeUTF("1.3");
+                        writeSocket.flush();
+                        System.out.println("Localização (X) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.writeUTF(input);
+                        writeSocket.flush();
+
+                        System.out.println("Localização (Y) (0 a 4): ");
+                        input = tecladoIn.readLine();
+                        writeSocket.writeUTF(input);
+                        writeSocket.flush();
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
+                        input="3";
+                    }
+
+                    else if(input.equals("4")){
+                        writeSocket.writeUTF("1.4");
+                        writeSocket.flush();
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
+                        input="4";
+                    }
+
+                    else if(input.equals("5")){
+                        writeSocket.writeUTF("2.5");
+                        writeSocket.flush();
+
+                        this.lock.lock();
+                        cond.await();
+                        this.lock.unlock();
+
+                        input="5";
+                    }
+
+                    if(input.equals("1") ||input.equals("2") || input.equals("3") || input.equals("0")) menu.showMenu();
+                    else if(input.equals("4") || input.equals("5")) menu.showMenu();
+                    else System.out.println("Opção Inválida");
+                }
                 else if(menu.getOpcao() == 3){
                     if(input.equals("0")){
                         break;

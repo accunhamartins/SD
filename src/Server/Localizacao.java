@@ -1,5 +1,7 @@
 package Server;
 
+import java.util.Objects;
+
 public class Localizacao{
     private int x;
     private int y;
@@ -34,6 +36,13 @@ public class Localizacao{
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Localizacao that = (Localizacao) o;
+        return x == that.x && y == that.y;
     }
 
     public Localizacao clone(){

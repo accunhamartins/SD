@@ -22,6 +22,7 @@ public class ThreadClientOutput implements Runnable{
 
     public void run() {
         int count = 0;
+        int saude = 0;
         try{
             String line;
 
@@ -41,6 +42,7 @@ public class ThreadClientOutput implements Runnable{
                 }
 
                 else if(line.equals("Sessão iniciada Saúde!")){
+                    saude = 1;
                     menu.setOpcao(2);
                     System.out.println("Sessão iniciada!");
                     this.lock.lock();
@@ -48,7 +50,7 @@ public class ThreadClientOutput implements Runnable{
                     this.lock.unlock();
                 }
 
-                else if(line.equals("Registado") || line.equals("Terminou sessão") || line.equals("Nome de utilizador não existe!")
+                else if(line.equals("Registado") || line.equals("Delegado Registado!") || line.equals("Terminou sessão") || line.equals("Nome de utilizador não existe!")
                         || line.equals("A password está incorreta!") || line.equals("Nome de utilizador já em uso!")
                         || line.equals("Localização inválida! Efetue novamente o registo!")){
                     menu.setOpcao(0);
@@ -61,7 +63,15 @@ public class ThreadClientOutput implements Runnable{
                         || line.contains("Numero de pessoas = ") || line.contains("A posição ")
                         || line.equals("Essa é a sua localização!")
                         ){
-                    menu.setOpcao(1);
+                    if(saude == 0) menu.setOpcao(1);
+                    else if (saude == 1) menu.setOpcao(2);
+                    System.out.println("\n"+line+"\n");
+                    this.lock.lock();
+                    cond.signal();
+                    this.lock.unlock();
+                }
+                else if(line.contains("Mapa dos utilizadores doentes por utilizadores totais numa localização")){
+                    menu.setOpcao(2);
                     System.out.println("\n"+line+"\n");
                     this.lock.lock();
                     cond.signal();

@@ -1,5 +1,6 @@
 package Server;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -17,16 +18,17 @@ public class Utilizador{
         this.credencial = 0;
         this.local = null;
         this.sick = false;
-        this.historico = new TreeSet<>();
+        this.historico = new HashSet<>();
     }
 
-    public Utilizador(String nome, String password, Localizacao local, Set<Localizacao> h, int credencial){
+    public Utilizador(String nome, String password, Localizacao local, int credencial){
         this.nome = nome;
         this.password = password;
         this.local = local;
         this.sick = false;
-        this.credencial = 0;
-        this.setHistorico(h);
+        this.credencial = credencial;
+        this.historico = new HashSet<>();
+        this.historico.add(local);
     }
 
     public Utilizador(Utilizador u){
@@ -82,13 +84,11 @@ public class Utilizador{
         this.sick = sick;
     }
 
-    public void setHistorico(Set<Localizacao> historico) {
-        this.historico = historico;
-    }
-
     public Utilizador clone(){
         return new Utilizador(this);
     }
 
-
+    public void addHistorico(Localizacao l){
+        this.historico.add(l);
+    }
 }

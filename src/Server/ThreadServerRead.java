@@ -100,6 +100,16 @@ public class ThreadServerRead implements Runnable{
                         ms.setMessages(e.getMessage(),null);
                     }
                 }
+
+                else if(input.equals("2.5")){
+                    try{
+                        String map = listUsers.mapToString();
+                        ms.setMessages(map,null);
+                    }
+                    catch (Exception e){
+                        ms.setMessages(e.getMessage(),null);
+                    }
+                }
             }
             readSocket.close();
             ms.setMessages("Sair",null);

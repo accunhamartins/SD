@@ -62,7 +62,11 @@ public class ListUsers{
                 throw new InvalidLocationException("Localização inválida! Efetue novamente o registo!");
              }
              else {
-                Utilizador user = new Utilizador(username,password, new Localizacao(x, y), new TreeSet<Localizacao>(), credencial);
+                 Localizacao ln = new Localizacao(x,y);
+                 System.out.println("1");
+                Utilizador user = new Utilizador(username,password, ln, credencial);
+                System.out.println("2");
+                System.out.println(user.getCredencial());
                 this.utilizadores.put(username, user);
                 this.map[x][y]++;
                 this.hist.get(x).get(y).add(username);
@@ -130,6 +134,7 @@ public class ListUsers{
                 map[xo][yo]--; //Como user saiu da antiga posição, deixa de constar nessa mesma posição no mapa
                 Utilizador u = utilizadores.get(username); //Alteramos a sua localização para a atual
                 u.setLocal(l);
+                u.addHistorico(l);
                 utilizadores.put(u.getNome(),u);
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
                 hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
@@ -181,11 +186,10 @@ public class ListUsers{
 
     }
 
-
     public void comunicaInfecao(String username, ServerBuffer ms){
         this.userLock.lock();
-        Utilizador u = this.utilizadores.get(username);
         try{
+            Utilizador u = this.utilizadores.get(username);
             u.setSick(true);
             this.utilizadores.put(username, u);
             map[u.getLocal().getX()][u.getLocal().getY()]--;
@@ -195,6 +199,48 @@ public class ListUsers{
 
         ms.setMessages("Utilizador Doente", null);
 
+    }
+
+    public String mapToString() {
+
+        this.userLock.lock();
+        try {
+            int[][] mapSick = new int[size][size];
+            Set<String> s = new HashSet<>();
+            for (String s1 : this.utilizadores.keySet()) {
+                if (this.utilizadores.get(s1).isSick()) s.add(s1);
+            }
+            for (String s2 : s) {
+                Utilizador u = this.utilizadores.get(s2);
+                Set<Localizacao> h = u.getHistorico();
+                for (Localizacao l : h) {
+                    mapSick[l.getX()][l.getY()]++;
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("Mapa dos utilizadores doentes por utilizadores totais numa localização\n  |  ");
+            for (int k = 0; k < size; k++) {
+                sb.append(k);
+                if (k + 1 != size) sb.append("  |  ");
+            }
+            sb.append("\n");
+
+            for (int i = 0; i < size; i++) {
+                sb.append(i + " | ");
+                for (int j = 0; j < size; j++) {
+                    int total = this.map[i][j] + mapSick[i][j];
+                    sb.append(mapSick[i][j] + "/" + total);
+                    if (j + 1 != size) sb.append(" | ");
+                }
+                sb.append("\n");
+            }
+
+            return sb.toString();
+        } finally {
+            this.userLock.unlock();
+        }
     }
 
 

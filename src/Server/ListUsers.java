@@ -20,7 +20,7 @@ public class ListUsers{
     private Lock userLock;
     private Lock posicaoLock = new ReentrantLock();
     private Condition cond = posicaoLock.newCondition();
-    private ArrayBlockingQueue queue;
+    private List<Condition> queue;
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
@@ -28,7 +28,7 @@ public class ListUsers{
         this.userLock = new ReentrantLock();
         this.hist = new ArrayList<>(size);
         this.cond = userLock.newCondition();
-        this.queue = new ArrayBlockingQueue(20);
+        this.queue = new ArrayList<Condition>();
         for(int i = 0; i < size; i++){
             hist.add(i, new ArrayList<>(size));
             for(int j = 0; j < size; j++){
@@ -152,10 +152,14 @@ public class ListUsers{
         }
     }
 
-    public void estaLivre(String xs, String ys, ServerBuffer ms, String nome) throws InterruptedException{
-        boolean livre = false;
+    public void estaLivre(String xs, String ys, ServerBuffer ms, String nome) throws InterruptedException, InvalidLocationException{
         int x = Integer.parseInt(xs);
         int y = Integer.parseInt(ys);
+
+        if(x < 0 || x >= size || y < 0 || y >= size){
+            throw new InvalidLocationException("Localização inválida!");
+        }
+        
         while(map[x][y] > 0){
             ms.setMessages("A posição não se encontra livre. Será avisado assim que estiver", null);
             this.posicaoLock.lock();

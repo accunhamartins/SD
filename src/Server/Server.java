@@ -19,8 +19,8 @@ public class Server {
             ss = new ServerSocket(12345);
 
             while((s = ss.accept()) != null){
-                BufferedReader readSocket = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                PrintWriter writeSocket = new PrintWriter(s.getOutputStream(),true);
+                DataInputStream readSocket = new DataInputStream(new BufferedInputStream(s.getInputStream()));
+                DataOutputStream writeSocket = new DataOutputStream(s.getOutputStream());
 
                 Condition cond = lock.newCondition();
                 ServerBuffer ms = new ServerBuffer(cond,lock);

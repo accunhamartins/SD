@@ -3,6 +3,7 @@ package Server;
 import Exceptions.InvalidLocationException;
 import Exceptions.InvalidLoginException;
 import Exceptions.InvalidRegistrationException;
+import Exceptions.UserInfetadoException;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,17 +19,18 @@ public class ListUsers{
     private int[][] map = new int[size][size];
     private List<List<Set <String>>> hist; //Matriz de users -> Java não permite criar matrizes com tipos não básicos
     private Lock userLock;
-    private Lock posicaoLock = new ReentrantLock();
-    private Condition cond = posicaoLock.newCondition();
-    private List<Condition> queue;
+    private Lock posicaoLock;
+    private Condition cond;
+    private Set<Condition> queue;
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
         this.messages = new HashMap<>();
         this.userLock = new ReentrantLock();
+        this.posicaoLock = new ReentrantLock();
         this.hist = new ArrayList<>(size);
-        this.cond = userLock.newCondition();
-        this.queue = new ArrayList<Condition>();
+        this.queue = new HashSet<>();
+        this.cond = posicaoLock.newCondition();
         for(int i = 0; i < size; i++){
             hist.add(i, new ArrayList<>(size));
             for(int j = 0; j < size; j++){
@@ -47,11 +49,12 @@ public class ListUsers{
      * @throws InvalidRegistrationException - Thrown if username has already been taken
      */
 
-    public void registerUser (String username, String password, String x1, String y1, ServerBuffer ms) throws InvalidRegistrationException, InvalidLocationException {
+    public void registerUser (String username, String password, String x1, String y1, String c,ServerBuffer ms) throws InvalidRegistrationException, InvalidLocationException {
         this.userLock.lock();
         try {
             int x = Integer.parseInt(x1);
             int y = Integer.parseInt(y1);
+            int credencial = Integer.parseInt(c);
             if(this.utilizadores.containsKey(username)){
                 throw new InvalidRegistrationException("Nome de utilizador já em uso!");
             }
@@ -59,7 +62,7 @@ public class ListUsers{
                 throw new InvalidLocationException("Localização inválida! Efetue novamente o registo!");
              }
              else {
-                Utilizador user = new Utilizador(username,password, new Localizacao(x, y), new TreeSet<Localizacao>());
+                Utilizador user = new Utilizador(username,password, new Localizacao(x, y), new TreeSet<Localizacao>(), credencial);
                 this.utilizadores.put(username, user);
                 this.map[x][y]++;
                 this.hist.get(x).get(y).add(username);
@@ -81,7 +84,7 @@ public class ListUsers{
      * @throws InvalidLoginException - thrown if username does not exist or if the password doesn't match the registered one.
      */
 
-    public Utilizador loginUser (String username, String password, ServerBuffer ms) throws InvalidLoginException {
+    public Utilizador loginUser (String username, String password, ServerBuffer ms) throws InvalidLoginException, UserInfetadoException {
         Utilizador u;
         this.userLock.lock();
         try{
@@ -89,6 +92,8 @@ public class ListUsers{
                 throw new InvalidLoginException("Nome de utilizador não existe!");
             } else if (!(this.utilizadores.get(username).getPassword().equals(password))){
                 throw new InvalidLoginException("A password está incorreta!");
+            } else if(this.utilizadores.get(username).isSick()){
+                throw new UserInfetadoException("Utilizador Doente");
             }
             u = this.utilizadores.get(username);
         
@@ -114,7 +119,6 @@ public class ListUsers{
         try{
             int x = Integer.parseInt(xs);
             int y = Integer.parseInt(ys);
-
             if(x < 0 || x >= size || y < 0 || y >= size){
                 throw new InvalidLocationException("Localização inválida!");
             }
@@ -130,7 +134,10 @@ public class ListUsers{
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
                 hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
                 this.messages.put(username,ms);
-                cond.signal();
+                for(Condition c: queue){
+                    c.signal();
+                    queue.remove(c);
+                }
             }
         } finally {
             this.userLock.unlock();
@@ -139,36 +146,55 @@ public class ListUsers{
     }
 
     public int numeroPorLocalizacao(String xs, String ys, ServerBuffer ms) throws InvalidLocationException {
-        this.userLock.lock();
-        try{
             int x = Integer.parseInt(xs);
             int y = Integer.parseInt(ys);
             if(x < 0 || x >= size || y < 0 || y >= size){
                 throw new InvalidLocationException("Localização inválida!");
             }
+
             return map[x][y];
-        } finally {
-            this.userLock.unlock();
-        }
     }
 
     public void estaLivre(String xs, String ys, ServerBuffer ms, String nome) throws InterruptedException, InvalidLocationException{
+        this.userLock.lock();
         int x = Integer.parseInt(xs);
         int y = Integer.parseInt(ys);
-
-        if(x < 0 || x >= size || y < 0 || y >= size){
-            throw new InvalidLocationException("Localização inválida!");
+        try {
+            Utilizador u = this.utilizadores.get(nome);
+            if (x < 0 || x >= size || y < 0 || y >= size) {
+                throw new InvalidLocationException("Localização inválida!");
+            } else if (u.getLocal().getX() == x && u.getLocal().getY() == y) {
+                throw new InvalidLocationException("Essa é a sua localização!");
+            }
+        } finally {
+            userLock.unlock();
         }
-        
-        while(map[x][y] > 0){
-            ms.setMessages("A posição não se encontra livre. Será avisado assim que estiver", null);
-            this.posicaoLock.lock();
-            cond = posicaoLock.newCondition();
-            cond.await();
-            this.posicaoLock.unlock();
+            while (map[x][y] > 0) {
+                ms.setMessages("A posição não se encontra livre. Será avisado assim que estiver", null);
+                this.posicaoLock.lock();
+                Condition condAux = posicaoLock.newCondition();
+                queue.add(condAux);
+                condAux.await();
+                this.posicaoLock.unlock();
+            }
+            ms.setMessages("A posição " + x + " " + y + " está livre", null);
+
+    }
+
+
+    public void comunicaInfecao(String username, ServerBuffer ms){
+        this.userLock.lock();
+        Utilizador u = this.utilizadores.get(username);
+        try{
+            u.setSick(true);
+            this.utilizadores.put(username, u);
+            map[u.getLocal().getX()][u.getLocal().getY()]--;
+        } finally {
+            this.userLock.unlock();
         }
 
-        ms.setMessages("A posição " + x + " " + y + " está livre", null);
+        ms.setMessages("Utilizador Doente", null);
+
     }
 
 

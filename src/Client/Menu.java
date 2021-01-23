@@ -20,13 +20,29 @@ public class Menu {
                                        "* 0 - Terminar Sessao                    *\n"+
                                        "******************************************\n");
                     break;
-            case 2: 
+            case 2: System.out.println("************** ÁREA CLIENTE **************\n"+
+                                       "* 1 - Número de pessoas por localização  *\n"+
+                                       "* 2 - Alterar localização                *\n"+
+                                       "* 3 - Comunicar Localização Livre        *\n"+
+                                       "* 4 - Comunicar Infeção                  *\n"+
+                                       "* 5 - Mapa de utilizadores               *\n"+
+                                       "* 0 - Terminar Sessao                    *\n"+
+                                       "******************************************\n");
                     break;     
-            case 3:
+            case 3: System.out.println("**************************************\n" +
+                                       "* ESTÁ INFETADO!!! FIQUE EM CASA!!!  *\n" +
+                                       "**************************************\n");
+                    System.out.println("Pressione 0 para sair");
                     break;
 
                     
         }
+    }
+
+    public void showInfecao(){
+        System.out.println("**************************************\n" +
+                           "* ESTÁ INFETADO!!! FIQUE EM CASA!!!  *\n" +
+                           "**************************************\n");
     }
 
     public int getOpcao(){

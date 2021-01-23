@@ -1,11 +1,8 @@
 package Client;
 
 import Server.*;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -22,7 +19,7 @@ public class Client {
         try{
             socket = new Socket("localhost",12345);
 
-            BufferedReader ler_socket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataInputStream ler_socket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 
             Menu menu = new Menu();
             Thread tci = new Thread (new ThreadClientInput(socket,menu,lock, cond));

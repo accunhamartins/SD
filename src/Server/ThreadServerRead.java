@@ -2,15 +2,16 @@ package Server;
 
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 
 
 public class ThreadServerRead implements Runnable{
-    private BufferedReader readSocket;
+    private DataInputStream readSocket;
     private ListUsers listUsers;
     private Utilizador user;
     private ServerBuffer ms;
 
-    public ThreadServerRead (BufferedReader rs, ListUsers lu, ServerBuffer sb) {
+    public ThreadServerRead (DataInputStream rs, ListUsers lu, ServerBuffer sb) {
         this.readSocket = rs;
         this.listUsers = lu;
         this.user = null;
@@ -20,26 +21,28 @@ public class ThreadServerRead implements Runnable{
     public void run(){
         try{
             String input;
-            while((input = readSocket.readLine()) != null) {
+            while((input = readSocket.readUTF()) != null) {
                 if(input.equals("1")){
                     String username, password;
-                    username = readSocket.readLine();
-                    password = readSocket.readLine();
+                    username = readSocket.readUTF();
+                    password = readSocket.readUTF();
                     try{
                         this.user = listUsers.loginUser(username, password, ms);
-                        ms.setMessages("Sessão iniciada!", null);
+                       if(user.getCredencial() == 0) ms.setMessages("Sessão iniciada!", null);
+                       else ms.setMessages("Sessão iniciada Saúde!", null);
                     } catch (Exception e){
                         ms.setMessages(e.getMessage() ,null);
                     }
                 }
                 else if(input.equals("2")){
-                    String user,pass, x, y;
-                    user = readSocket.readLine();
-                    pass = readSocket.readLine();
-                    x = readSocket.readLine();
-                    y = readSocket.readLine();
+                    String user,pass, x, y, c;
+                    user = readSocket.readUTF();
+                    pass = readSocket.readUTF();
+                    x = readSocket.readUTF();
+                    y = readSocket.readUTF();
+                    c = readSocket.readUTF();
                     try{
-                        listUsers.registerUser(user,pass,x,y,ms);
+                        listUsers.registerUser(user,pass,x,y,c,ms);
                         ms.setMessages("Registado",null);
                     }
                     catch(Exception e){
@@ -49,8 +52,8 @@ public class ThreadServerRead implements Runnable{
 
                 else if(input.equals("1.1")){
                     String x,y;
-                    x = readSocket.readLine();
-                    y = readSocket.readLine();
+                    x = readSocket.readUTF();
+                    y = readSocket.readUTF();
                     try{
                         int count = this.listUsers.numeroPorLocalizacao(x,y,ms);
                         ms.setMessages("Numero de pessoas = " + count,null);
@@ -63,8 +66,8 @@ public class ThreadServerRead implements Runnable{
 
                 else if(input.equals("1.2")){
                     String x,y;
-                    x = readSocket.readLine();
-                    y = readSocket.readLine();
+                    x = readSocket.readUTF();
+                    y = readSocket.readUTF();
                     try{
                         this.listUsers.validaLocalizacao(user.getNome(),x,y,ms);
                         ms.setMessages("Localizacao Atualizada",null);
@@ -77,15 +80,25 @@ public class ThreadServerRead implements Runnable{
 
                 else if(input.equals("1.3")){
                     String x,y;
-                    x = readSocket.readLine();
-                    y = readSocket.readLine();
+                    x = readSocket.readUTF();
+                    y = readSocket.readUTF();
                     try{
                         listUsers.estaLivre(x , y, ms, this.user.getNome());
+                        ms.setMessages("Aguardando por posição livre", null);
                     }
                     catch (Exception e){
                         ms.setMessages(e.getMessage(),null);
                     }
+                }
 
+                else if(input.equals("1.4")){
+                    try{
+                        listUsers.comunicaInfecao(this.user.getNome(), ms);
+                        ms.setMessages("Utilizador Doente", null);
+                    }
+                    catch (Exception e){
+                        ms.setMessages(e.getMessage(),null);
+                    }
                 }
             }
             readSocket.close();

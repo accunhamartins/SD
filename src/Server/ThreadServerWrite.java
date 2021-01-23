@@ -1,16 +1,17 @@
 package Server;
 
+import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ThreadServerWrite implements Runnable{
-    private PrintWriter write_socket;
+    private DataOutputStream write_socket;
     private Condition cond;
     private ServerBuffer ms;
     private ReentrantLock lock;
 
-    public ThreadServerWrite(PrintWriter write_socket, ServerBuffer ms){
+    public ThreadServerWrite(DataOutputStream write_socket, ServerBuffer ms){
         this.write_socket = write_socket;
         this.cond = ms.getCondition();
         this.ms = ms;
@@ -26,7 +27,8 @@ public class ThreadServerWrite implements Runnable{
                     cond.await();
                 if(linha.equals("Sair"))
                     break;
-                this.write_socket.println(linha);
+                this.write_socket.writeUTF(linha);
+                write_socket.flush();
             }
         }
         catch(Exception e){

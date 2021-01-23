@@ -130,10 +130,7 @@ public class ListUsers{
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
                 hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
                 this.messages.put(username,ms);
-                if(queue.peek()!=null){
-                    Condition c = (Condition) queue.take();
-                    c.signal();
-                }
+                cond.signal();
             }
         } finally {
             this.userLock.unlock();
@@ -163,7 +160,6 @@ public class ListUsers{
             ms.setMessages("A posição não se encontra livre. Será avisado assim que estiver", null);
             this.posicaoLock.lock();
             cond = posicaoLock.newCondition();
-            queue.put(cond);
             cond.await();
             this.posicaoLock.unlock();
         }

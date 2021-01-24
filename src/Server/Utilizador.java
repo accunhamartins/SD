@@ -10,6 +10,7 @@ public class Utilizador{
     private Localizacao local;
     private int credencial;
     private boolean sick;
+    private int ping;
     private Set<Localizacao> historico;
 
     public Utilizador(){
@@ -18,6 +19,7 @@ public class Utilizador{
         this.credencial = 0;
         this.local = null;
         this.sick = false;
+        this.ping = 0;
         this.historico = new HashSet<>();
     }
 
@@ -26,6 +28,7 @@ public class Utilizador{
         this.password = password;
         this.local = local;
         this.sick = false;
+        this.ping = 0;
         this.credencial = credencial;
         this.historico = new HashSet<>();
         this.historico.add(local);
@@ -38,6 +41,7 @@ public class Utilizador{
         this.sick = u.isSick();
         this.historico = u.getHistorico();
         this.credencial = u.getCredencial();
+        this.ping = u.getPing();
     }
 
     public String getPassword() {
@@ -47,7 +51,11 @@ public class Utilizador{
     public String getNome() {
         return nome;
     }
-    
+
+    public int getPing() {
+        return ping;
+    }
+
     public Localizacao getLocal() {
         return local.clone();
     }
@@ -66,6 +74,10 @@ public class Utilizador{
 
     public void setLocal(Localizacao local) {
         this.local = local;
+    }
+
+    public void setPing(int ping) {
+        this.ping = ping;
     }
 
     public void setCredencial(int credencial) {
@@ -91,4 +103,14 @@ public class Utilizador{
     public void addHistorico(Localizacao l){
         this.historico.add(l);
     }
+
+    public boolean cruzou(Set<Localizacao> hist){
+        for(Localizacao l: this.historico){
+            for(Localizacao j: hist){
+                if (j.getX() == l.getX() && j.getY() == l.getY()) return true;
+            }
+        }
+        return false;
+    }
+
 }

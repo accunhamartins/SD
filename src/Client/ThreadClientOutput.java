@@ -93,6 +93,15 @@ public class ThreadClientOutput implements Runnable{
                     this.lock.unlock();
                 }
 
+                else if(line.equals("⚠ ESTÁ EM RISCO DE INFEÇÃO ⚠")){
+                    if(saude == 0) menu.setOpcao(1);
+                    else if (saude == 1) menu.setOpcao(2);
+                    System.out.println("\n"+line+"\n");
+                    this.lock.lock();
+                    cond.signal();
+                    this.lock.unlock();
+                }
+
                 else if(line.contains("Mapa dos utilizadores doentes por utilizadores totais numa localização")){
                     menu.setOpcao(2);
                     System.out.println("\n"+line+"\n");

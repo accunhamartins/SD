@@ -21,6 +21,7 @@ public class ListUsers{
     private Lock userLock;
     private Lock posicaoLock;
     private Condition cond;
+    private Condition condInfecao;
     private Set<Condition> queue;
 
     public ListUsers(){
@@ -31,6 +32,7 @@ public class ListUsers{
         this.hist = new ArrayList<>(size);
         this.queue = new HashSet<>();
         this.cond = posicaoLock.newCondition();
+        this.condInfecao = userLock.newCondition();
         for(int i = 0; i < size; i++){
             hist.add(i, new ArrayList<>(size));
             for(int j = 0; j < size; j++){
@@ -96,8 +98,10 @@ public class ListUsers{
             } else if(this.utilizadores.get(username).isSick()){
                 throw new UserInfetadoException("Utilizador Doente");
             }
+
             u = this.utilizadores.get(username);
-        
+            Thread ti = new Thread(new ThreadInfecao(this.utilizadores, this.condInfecao, this.userLock, u, ms));
+            ti.start();
             if(this.messages.containsKey(username)){
                 ServerBuffer m = this.messages.get(username);
                 String linha;
@@ -206,6 +210,7 @@ public class ListUsers{
             u.setSick(true);
             this.utilizadores.put(username, u);
             map[u.getLocal().getX()][u.getLocal().getY()]--;
+            this.condInfecao.signalAll();
         } finally {
             this.userLock.unlock();
         }

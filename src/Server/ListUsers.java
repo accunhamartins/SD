@@ -139,10 +139,10 @@ public class ListUsers{
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
                 hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
                 this.messages.put(username,ms);
-                for(Condition c: queue){
-                    c.signal();
-                    queue.remove(c);
+                if(map[xo][yo] == 0){
+                    this.cond.signalAll();
                 }
+
             }
         } finally {
             this.userLock.unlock();
@@ -174,15 +174,11 @@ public class ListUsers{
         } finally {
             userLock.unlock();
         }
-            while (map[x][y] > 0) {
-                ms.setMessages("A posição não se encontra livre. Será avisado assim que estiver", null);
-                this.posicaoLock.lock();
-                Condition condAux = posicaoLock.newCondition();
-                queue.add(condAux);
-                condAux.await();
-                this.posicaoLock.unlock();
-            }
-            ms.setMessages("A posição " + x + " " + y + " está livre", null);
+           if(map[x][y] == 0) ms.setMessages("A posição " + x + " " + y + " está livre", null);
+           else{
+               Thread tpl = new Thread(new ThreadPosicaoLivre(this.map, x , y, this.posicaoLock, this.cond, ms));
+               tpl.start();
+           }
 
     }
 

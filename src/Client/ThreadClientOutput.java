@@ -76,8 +76,15 @@ public class ThreadClientOutput implements Runnable{
                 else if(line.equals("Localizacao Atualizada") ||
                         line.equals("Localização inválida!") ||
                         line.equals("Essa é a sua localização!") ||
-                        line.contains("Numero de pessoas = ") ||
-                        line.contains("A posição ")){
+                        line.contains("Numero de pessoas = ")){
+                    if(saude == 0) menu.setOpcao(1);
+                    else if (saude == 1) menu.setOpcao(2);
+                    System.out.println("\n"+line+"\n");
+                    this.lock.lock();
+                    cond.signal();
+                    this.lock.unlock();
+                }
+                else if(line.contains("A posição ")){
                     if(saude == 0) menu.setOpcao(1);
                     else if (saude == 1) menu.setOpcao(2);
                     System.out.println("\n"+line+"\n");

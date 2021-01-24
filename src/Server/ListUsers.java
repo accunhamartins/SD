@@ -158,7 +158,7 @@ public class ListUsers{
         }
     }
 
-    /**
+    /** Given a location, this will method will return the amount of users on that location
      *
      * @param xs - X coordinate of Location to be inspected
      * @param ys - Y coordinate of Location to be inspected

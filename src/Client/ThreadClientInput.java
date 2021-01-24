@@ -7,6 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class ThreadClientInput implements Runnable{
+    private final int size = 5;
     private BufferedReader tecladoIn;
     private DataOutputStream writeSocket;
     private Socket socket;
@@ -71,12 +72,12 @@ public class ThreadClientInput implements Runnable{
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (X) (0 a 4): ");
+                        System.out.println("Localização (X) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (Y) (0 a 4): ");
+                        System.out.println("Localização (Y) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
@@ -115,12 +116,12 @@ public class ThreadClientInput implements Runnable{
                         writeSocket.writeUTF("1.1");
                         writeSocket.flush();
 
-                        System.out.println("Localização (X) (0 a 4): ");
+                        System.out.println("Localização (X) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (Y) (0 a 4): ");
+                        System.out.println("Localização (Y) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
@@ -137,12 +138,12 @@ public class ThreadClientInput implements Runnable{
 
                         writeSocket.writeUTF("1.2");
                         writeSocket.flush();
-                        System.out.println("Localização (X) (0 a 4): ");
+                        System.out.println("Localização (X) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (Y) (0 a 4): ");
+                        System.out.println("Localização (Y) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
@@ -159,12 +160,12 @@ public class ThreadClientInput implements Runnable{
 
                         writeSocket.writeUTF("1.3");
                         writeSocket.flush();
-                        System.out.println("Localização (X) (0 a 4): ");
+                        System.out.println("Localização (X) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (Y) (0 a 4): ");
+                        System.out.println("Localização (Y) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
@@ -204,12 +205,12 @@ public class ThreadClientInput implements Runnable{
                     else if (input.equals("1")){
                         writeSocket.writeUTF("1.1");
                         writeSocket.flush();
-                        System.out.println("Localização (X) (0 a 4): ");
+                        System.out.println("Localização (X) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (Y) (0 a 4): ");
+                        System.out.println("Localização (Y) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
@@ -226,12 +227,12 @@ public class ThreadClientInput implements Runnable{
 
                         writeSocket.writeUTF("1.2");
                         writeSocket.flush();
-                        System.out.println("Localização (X) (0 a 4): ");
+                        System.out.println("Localização (X) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (Y) (0 a 4): ");
+                        System.out.println("Localização (Y) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
@@ -248,12 +249,12 @@ public class ThreadClientInput implements Runnable{
 
                         writeSocket.writeUTF("1.3");
                         writeSocket.flush();
-                        System.out.println("Localização (X) (0 a 4): ");
+                        System.out.println("Localização (X) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
 
-                        System.out.println("Localização (Y) (0 a 4): ");
+                        System.out.println("Localização (Y) (0 a " + (size - 1) + "): ");
                         input = tecladoIn.readLine();
                         writeSocket.writeUTF(input);
                         writeSocket.flush();
@@ -308,7 +309,6 @@ public class ThreadClientInput implements Runnable{
             socket.shutdownOutput();
 
         } catch(Exception e) {
-            System.out.println(e.getMessage());
         }
     }
 }

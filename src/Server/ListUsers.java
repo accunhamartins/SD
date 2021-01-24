@@ -62,11 +62,8 @@ public class ListUsers{
                 throw new InvalidLocationException("Localização inválida! Efetue novamente o registo!");
              }
              else {
-                 Localizacao ln = new Localizacao(x,y);
-                 System.out.println("1");
+                Localizacao ln = new Localizacao(x,y);
                 Utilizador user = new Utilizador(username,password, ln, credencial);
-                System.out.println("2");
-                System.out.println(user.getCredencial());
                 this.utilizadores.put(username, user);
                 this.map[x][y]++;
                 this.hist.get(x).get(y).add(username);

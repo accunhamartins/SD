@@ -95,7 +95,8 @@ public class ThreadClientOutput implements Runnable{
                 }
 
                 else if(line.equals("Não se encontra livre. Será avisado assim que estiver")){
-                    menu.setOpcao(1);
+                    if(saude == 0) menu.setOpcao(1);
+                    else if (saude == 1) menu.setOpcao(2);
                     if(count == 0) System.out.println("\n"+line+"\n");
                     count++;
                     this.lock.lock();
@@ -111,7 +112,6 @@ public class ThreadClientOutput implements Runnable{
                 }
             }
         } catch (Exception e){
-            System.out.println(e.getMessage());
         }
     }
 }

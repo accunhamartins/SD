@@ -29,20 +29,20 @@ public class ThreadInfecao implements Runnable{
     public void run() {
         int flag = 0;
         try {
-            while (!existeDoente()) {
+            while (!existeDoente() || flag == 0) {
                 this.lock.lock();
                 this.cond.await();
                 this.lock.unlock();
-            }
 
-           if(!utilizadores.get(user.getNome()).isSick()){
-               for(Utilizador u: utilizadores.values()){
-                    if(user.cruzou(u.getHistorico()) && !user.getNome().equals(u.getNome()) && u.isSick()){
-                        flag = 1;
+                if (!utilizadores.get(user.getNome()).isSick()) {
+                    for (Utilizador u : utilizadores.values()) {
+                        if (user.cruzou(u.getHistorico()) && !user.getNome().equals(u.getNome()) && u.isSick()) {
+                            flag = 1;
+                        }
                     }
-               }
-               if(flag == 1) sb.setMessages("⚠ ESTÁ EM RISCO DE INFEÇÃO ⚠", null);
-           }
+                    if (flag == 1) sb.setMessages("⚠ ESTÁ EM RISCO DE INFEÇÃO ⚠", null);
+                }
+            }
         } catch (InterruptedException e){
 
         }

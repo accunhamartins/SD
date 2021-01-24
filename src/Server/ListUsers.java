@@ -116,6 +116,17 @@ public class ListUsers{
         return u;
     }
 
+    /** This method will check if a location is valid, and if so, change the user's location to the new one
+     *  update the map that has every user's current position and add his new position to his Location's history
+     *
+     * @param username - User's username is used to access user's information stored in the system
+     * @param xs - X coordinate of new location
+     * @param ys - Y coordinate of new location
+     * @param ms - - Buffer used to communicate between server and client
+     * @throws InvalidLocationException - If Location is invalid (either outside the map or invalid values)
+     * @throws InterruptedException
+     */
+
     public void validaLocalizacao (String username, String xs, String ys, ServerBuffer ms) throws InvalidLocationException, InterruptedException {
         this.userLock.lock();
         this.posicaoLock.lock();
@@ -149,6 +160,15 @@ public class ListUsers{
             this.posicaoLock.unlock();
         }
     }
+
+    /**
+     *
+     * @param xs - X coordinate of Location to be inspected
+     * @param ys - Y coordinate of Location to be inspected
+     * @param ms - Buffer used to communicate between server and client
+     * @return - the amount of user's currently at Location (x,y)
+     * @throws InvalidLocationException
+     */
 
     public int numeroPorLocalizacao(String xs, String ys, ServerBuffer ms) throws InvalidLocationException {
             int x = Integer.parseInt(xs);

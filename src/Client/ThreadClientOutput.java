@@ -26,6 +26,14 @@ public class ThreadClientOutput implements Runnable{
         try{
             String line;
 
+            //We'll set menu.option according to the type of user and situation
+            //If user hasn't logged in yet, set menu.opcao as 0 -> Login/Register Menu
+            //If user is an administrator, set menu.opcao as 2 -> Admin Menu
+            //If user is just a client, set menu.opcao as 1 -> User Menu
+            //if user has declared himself sick, set menu.opcao as 3 -> Infected Menu
+
+            //We'll act according to the output of executing the program's available tasks
+
             while((line = readSocket.readUTF()) != null) {
                 if(line.equals("Sessão iniciada!")){
                     menu.setOpcao(1);
@@ -34,6 +42,7 @@ public class ThreadClientOutput implements Runnable{
                     cond.signal();
                     this.lock.unlock();
                 }
+
                 else if(line.equals("0")){
                     menu.setOpcao(1);
                     this.lock.lock();
@@ -50,19 +59,25 @@ public class ThreadClientOutput implements Runnable{
                     this.lock.unlock();
                 }
 
-                else if(line.equals("Registado") || line.equals("Delegado Registado!") || line.equals("Terminou sessão") || line.equals("Nome de utilizador não existe!")
-                        || line.equals("A password está incorreta!") || line.equals("Nome de utilizador já em uso!")
-                        || line.equals("Localização inválida! Efetue novamente o registo!")){
+                else if(line.equals("Registado") ||
+                        line.equals("Delegado Registado!") ||
+                        line.equals("Terminou sessão") ||
+                        line.equals("Nome de utilizador não existe!") ||
+                        line.equals("A password está incorreta!") ||
+                        line.equals("Nome de utilizador já em uso!") ||
+                        line.equals("Localização inválida! Efetue novamente o registo!")){
                     menu.setOpcao(0);
                     System.out.println("\n"+line+"\n");
                     this.lock.lock();
                     cond.signal();
                     this.lock.unlock();
                 }
-                else if(line.equals("Localizacao Atualizada") || line.equals("Localização inválida!")
-                        || line.contains("Numero de pessoas = ") || line.contains("A posição ")
-                        || line.equals("Essa é a sua localização!")
-                        ){
+
+                else if(line.equals("Localizacao Atualizada") ||
+                        line.equals("Localização inválida!") ||
+                        line.equals("Essa é a sua localização!") ||
+                        line.contains("Numero de pessoas = ") ||
+                        line.contains("A posição ")){
                     if(saude == 0) menu.setOpcao(1);
                     else if (saude == 1) menu.setOpcao(2);
                     System.out.println("\n"+line+"\n");
@@ -70,6 +85,7 @@ public class ThreadClientOutput implements Runnable{
                     cond.signal();
                     this.lock.unlock();
                 }
+
                 else if(line.contains("Mapa dos utilizadores doentes por utilizadores totais numa localização")){
                     menu.setOpcao(2);
                     System.out.println("\n"+line+"\n");

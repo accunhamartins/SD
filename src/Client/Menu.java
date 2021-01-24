@@ -1,7 +1,6 @@
 package Client;
 
 public class Menu {
-    private String menu;
     private int opcao;
 
     public void showMenu() {
@@ -20,7 +19,7 @@ public class Menu {
                                        "* 0 - Terminar Sessao                    *\n"+
                                        "******************************************\n");
                     break;
-            case 2: System.out.println("************** ÁREA CLIENTE **************\n"+
+            case 2: System.out.println("************** ÁREA DELEGADO *************\n"+
                                        "* 1 - Número de pessoas por localização  *\n"+
                                        "* 2 - Alterar localização                *\n"+
                                        "* 3 - Comunicar Localização Livre        *\n"+
@@ -29,20 +28,15 @@ public class Menu {
                                        "* 0 - Terminar Sessao                    *\n"+
                                        "******************************************\n");
                     break;     
-            case 3: System.out.println("**************************************\n" +
-                                       "* ESTÁ INFETADO!!! FIQUE EM CASA!!!  *\n" +
-                                       "**************************************\n");
+            case 3: System.out.println("***************************************\n" +
+                                       "*    ESTÁ INFETADO! FIQUE EM CASA!    *\n" +
+                                       "*        Pressione 0 para sair        *\n" +
+                                       "***************************************\n");
                     System.out.println("Pressione 0 para sair");
                     break;
 
                     
         }
-    }
-
-    public void showInfecao(){
-        System.out.println("**************************************\n" +
-                           "* ESTÁ INFETADO!!! FIQUE EM CASA!!!  *\n" +
-                           "**************************************\n");
     }
 
     public int getOpcao(){

@@ -11,7 +11,6 @@ public class Server {
     public static void main (String[] args) throws IOException {
         ServerSocket ss;
         Socket s = null;
-        int i = 0;
         ListUsers l = new ListUsers();
         ReentrantLock lock = new ReentrantLock();
 

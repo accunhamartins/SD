@@ -6,7 +6,6 @@ import Exceptions.InvalidRegistrationException;
 import Exceptions.UserInfetadoException;
 
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,28 +16,18 @@ public class ListUsers{
     private Map<String,Utilizador> utilizadores; //Key is the username
     private Map<String, ServerBuffer> messages;
     private int[][] map = new int[size][size];
-    private List<List<Set <String>>> hist; //Matriz de users -> Java não permite criar matrizes com tipos não básicos
     private Lock userLock;
     private Lock posicaoLock;
     private Condition cond;
     private Condition condInfecao;
-    private Set<Condition> queue;
 
     public ListUsers(){
         this.utilizadores = new HashMap<>();
         this.messages = new HashMap<>();
         this.userLock = new ReentrantLock();
         this.posicaoLock = new ReentrantLock();
-        this.hist = new ArrayList<>(size);
-        this.queue = new HashSet<>();
         this.cond = posicaoLock.newCondition();
         this.condInfecao = userLock.newCondition();
-        for(int i = 0; i < size; i++){
-            hist.add(i, new ArrayList<>(size));
-            for(int j = 0; j < size; j++){
-                hist.get(i).add(j,new TreeSet<>());
-            }
-        } //Cria a matriz e em cada posição põe um set
     }
 
     /**
@@ -68,7 +57,6 @@ public class ListUsers{
                 Utilizador user = new Utilizador(username,password, ln, credencial);
                 this.utilizadores.put(username, user);
                 this.map[x][y]++;
-                this.hist.get(x).get(y).add(username);
                 this.messages.put(username,ms);
             }
         } finally {
@@ -149,7 +137,6 @@ public class ListUsers{
                 u.addHistorico(l);
                 utilizadores.put(u.getNome(),u);
                 map[x][y]++; //Tem de constar na sua nova posição no mapa
-                hist.get(x).get(y).add(username); //Colocamos já o User no historico de todos os users que estiveram nesta posição
                 this.messages.put(username,ms);
                 if(map[xo][yo] == 0){
                     this.cond.signalAll();

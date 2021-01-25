@@ -159,13 +159,19 @@ public class ListUsers{
      */
 
     public int numeroPorLocalizacao(String xs, String ys, ServerBuffer ms) throws InvalidLocationException {
+            this.userLock.lock();
+            int res = 0;
+       try {
             int x = Integer.parseInt(xs);
             int y = Integer.parseInt(ys);
-            if(x < 0 || x >= size || y < 0 || y >= size){
+            if (x < 0 || x >= size || y < 0 || y >= size) {
                 throw new InvalidLocationException("Localização inválida!");
             }
-
-            return map[x][y];
+            res = map[x][y];
+        } finally {
+            this.userLock.unlock();
+       }
+       return res;
     }
 
     public void estaLivre(String xs, String ys, ServerBuffer ms, String nome) throws InterruptedException, InvalidLocationException{

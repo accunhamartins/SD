@@ -1,8 +1,6 @@
 package Client;
 
-import Client.Menu;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
